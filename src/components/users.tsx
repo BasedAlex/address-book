@@ -19,6 +19,11 @@ export const User = ({ users, onDeleteUser, onAddToFav }: Props) => {
 					<List.Item
 						style={{ padding: 5, display: 'flex', gap: 10 }}
 						key={user.id}
+						draggable={true}
+						// onDrag={}
+						// onDrop={}
+						// onDragLeave={}
+						// onDragOver={}
 					>
 						{`${user.name}, ${user.phone}, ${user.email}`}
 						<Space wrap>
