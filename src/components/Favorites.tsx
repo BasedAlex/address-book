@@ -28,9 +28,13 @@ export const Favorites = ({ users, onDeleteFromFav, onAddToFav }: Props) => {
 		console.log('drop', user)
 		users.map((item: any) => {
 			if (item.id === user.id) {
+				console.log('item', item.id)
+				console.log('user', user.id)
 				return { ...item }
 			}
 			if (item.id === currentUser?.id) {
+				console.log('item', item.id)
+				console.log('currentUser', currentUser.id)
 				return { currentUser }
 			}
 			return item
