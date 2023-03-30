@@ -1,6 +1,7 @@
 import { FilterType } from '../types'
 import { Input } from 'antd'
 import { Select, Space } from 'antd'
+import { useAppDispatch } from '../hooks/hooks'
 
 type Props = {
 	search: string
@@ -15,6 +16,10 @@ export const Filter = ({
 	filterType,
 	clearInput,
 }: Props) => {
+	const dispatch = useAppDispatch()
+
+	/// сложить в стейт
+
 	return (
 		<div style={{ marginTop: 5, marginLeft: 20, display: 'flex', gap: 10 }}>
 			<Input

@@ -1,16 +1,17 @@
 import { UserType } from '../types'
 import { Button, Space, List } from 'antd'
 import { useState } from 'react'
+import { useAppDispatch, useAppSelector } from '../hooks/hooks'
+import { deleteFavUser } from '../store/slices/favoritesSlice'
+import { filter } from './utils'
 
-type Props = {
-	users: UserType[]
-	onDeleteUser: (id: number) => void
-	onAddToFav: (item: UserType) => void
-	onDeleteFromFav: (id: number) => void
-}
-
-export const Favorites = ({ users, onDeleteFromFav, onAddToFav }: Props) => {
+export const Favorites = () => {
 	const [currentUser, setCurrentUser]: any = useState(null)
+
+	const listFavUsers = useAppSelector(state => state.favorites.currentFavUsers)
+	const { search, filterType } = useAppSelector(state => state.filter)
+	console.log(listFavUsers)
+	const dispatch = useAppDispatch()
 
 	const dragStartHandler = (e: any, user: any) => {
 		console.log('drag', user)
@@ -23,10 +24,14 @@ export const Favorites = ({ users, onDeleteFromFav, onAddToFav }: Props) => {
 		e.preventDefault()
 	}
 
+	const onDeleteFromFav = (id: number) => {
+		dispatch(deleteFavUser({ id }))
+	}
+
 	const dropHandler = (e: any, user: UserType) => {
 		e.preventDefault()
 		console.log('drop', user)
-		users.map((item: any) => {
+		listFavUsers.map((item: any) => {
 			if (item.id === user.id) {
 				console.log('item', item.id)
 				console.log('user', user.id)
@@ -43,14 +48,6 @@ export const Favorites = ({ users, onDeleteFromFav, onAddToFav }: Props) => {
 
 	console.log(currentUser)
 
-	const sortUsers = (a: any, b: any) => {
-		if (a.id != b.id) {
-			return 1
-		} else {
-			return -1
-		}
-	}
-
 	return (
 		<>
 			<div>Favorites</div>
@@ -58,7 +55,7 @@ export const Favorites = ({ users, onDeleteFromFav, onAddToFav }: Props) => {
 				size='small'
 				style={{ marginTop: 5, marginLeft: 20, display: 'flex', gap: 10 }}
 			>
-				{users.sort(sortUsers).map((user: any) => (
+				{filter(listFavUsers, search, filterType).map((user: any) => (
 					<List.Item
 						style={{ padding: 5, display: 'flex', gap: 10 }}
 						key={user.id}

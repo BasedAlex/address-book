@@ -1,9 +1,10 @@
 import { Input } from 'antd'
 import Button from 'antd/es/button'
 import { useState } from 'react'
+import { useAppDispatch } from '../hooks/hooks'
+import { addUser } from '../store/slices/usersSlice'
 
 type Props = {
-	onAddUser: () => void
 	userName: string
 	setUserName: (value: string) => void
 	phone: string
@@ -15,7 +16,6 @@ type Props = {
 
 export const AddNewUser = (props: Props) => {
 	const {
-		onAddUser,
 		userName,
 		setUserName,
 		phone,
@@ -25,6 +25,32 @@ export const AddNewUser = (props: Props) => {
 		clearAllInputs,
 	} = props
 	const [open, setOpen] = useState(false)
+	const [errorPhone, setErrorPhone] = useState(false)
+
+	const dispatch = useAppDispatch()
+
+	const onSetPhone = (value: string) => {
+		const regex = /^[0-9]+$/
+		setErrorPhone(
+			!(regex.test(value) && value.length >= 3 && value.length <= 12)
+		)
+
+		console.log(
+			'!!!!!',
+			!(regex.test(value) && value.length >= 3 && value.length <= 12)
+		)
+		setPhone(value)
+	}
+
+	const onAddUser = () => {
+		const newUser = {
+			id: new Date().valueOf(),
+			name: userName,
+			phone: phone,
+			email: email,
+		}
+		dispatch(addUser(newUser))
+	}
 
 	return (
 		<>
@@ -41,8 +67,12 @@ export const AddNewUser = (props: Props) => {
 						placeholder='Phone'
 						bordered={true}
 						value={phone}
-						style={{ width: 200 }}
-						onChange={e => setPhone(e.currentTarget.value)}
+						style={
+							errorPhone
+								? { borderColor: 'red', width: 200 }
+								: { borderColor: '', width: 200 }
+						}
+						onChange={e => onSetPhone(e.currentTarget.value)}
 					/>
 					<Input
 						placeholder='Email'
@@ -54,15 +84,17 @@ export const AddNewUser = (props: Props) => {
 				</>
 			)}
 			<Button onClick={() => setOpen(!open)}>Open User</Button>
-			<Button
-				onClick={() => {
-					onAddUser()
-					clearAllInputs()
-					setOpen(!open)
-				}}
-			>
-				Add User
-			</Button>
+			{userName && (email || !errorPhone) ? (
+				<Button
+					onClick={() => {
+						onAddUser()
+						clearAllInputs()
+						setOpen(!open)
+					}}
+				>
+					Add User
+				</Button>
+			) : null}
 		</>
 	)
 }

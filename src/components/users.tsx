@@ -1,13 +1,24 @@
 import { UserType } from '../types'
 import { Button, Space, List } from 'antd'
+import { useAppDispatch, useAppSelector } from '../hooks/hooks'
+import { deleteUser } from '../store/slices/usersSlice'
+import { addFavUser } from '../store/slices/favoritesSlice'
+import { filter } from './utils'
 
-type Props = {
-	users: UserType[]
-	onDeleteUser: (id: number) => void
-	onAddToFav: (item: UserType) => void
-}
+export const User = () => {
+	const listUsers = useAppSelector(state => state.users.currentUsers)
+	const { search, filterType } = useAppSelector(state => state.filter)
 
-export const User = ({ users, onDeleteUser, onAddToFav }: Props) => {
+	const dispatch = useAppDispatch()
+
+	const onDeleteUser = (id: number) => {
+		dispatch(deleteUser({ id }))
+	}
+
+	const onAddToFav = (user: any) => {
+		dispatch(addFavUser(user))
+	}
+
 	return (
 		<>
 			<div>Normal Users</div>
@@ -15,7 +26,7 @@ export const User = ({ users, onDeleteUser, onAddToFav }: Props) => {
 				size='small'
 				style={{ marginTop: 5, marginLeft: 20, display: 'flex', gap: 10 }}
 			>
-				{users.map(user => (
+				{filter(listUsers, search, filterType).map(user => (
 					<List.Item
 						style={{ padding: 5, display: 'flex', gap: 10 }}
 						key={user.id}
