@@ -2,21 +2,29 @@ import { FilterType } from '../types'
 import { Input } from 'antd'
 import { Select, Space } from 'antd'
 import { useAppDispatch } from '../hooks/hooks'
+import { useState } from 'react'
 
-type Props = {
-	search: string
-	setSearch: (value: string) => void
-	filterType: FilterType
-	clearInput: (option: FilterType) => void
-}
+export const Filter = () => {
+	const [search, setSearch] = useState('')
+	const [filterType, setFilterType] = useState<FilterType>('name')
+	const [userName, setUserName] = useState('')
+	const [phone, setPhone] = useState('')
+	const [email, setEmail] = useState('')
 
-export const Filter = ({
-	search,
-	setSearch,
-	filterType,
-	clearInput,
-}: Props) => {
 	const dispatch = useAppDispatch()
+
+	const clearInput = (option: FilterType) => {
+		if (option !== filterType) {
+			setSearch('')
+		}
+		setFilterType(option)
+	}
+
+	const clearAllInputs = () => {
+		setUserName('')
+		setPhone('')
+		setEmail('')
+	}
 
 	/// сложить в стейт
 

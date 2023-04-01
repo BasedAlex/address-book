@@ -1,5 +1,5 @@
 import { UserType } from '../types'
-import { Button, Space, List } from 'antd'
+import { Button, Space, List, Checkbox } from 'antd'
 import { useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../hooks/hooks'
 import { deleteFavUser } from '../store/slices/favoritesSlice'
@@ -7,6 +7,7 @@ import { filter } from './utils'
 
 export const Favorites = () => {
 	const [currentUser, setCurrentUser]: any = useState(null)
+	const [checked, setChecked] = useState(false)
 
 	const listFavUsers = useAppSelector(state => state.favorites.currentFavUsers)
 	const { search, filterType } = useAppSelector(state => state.filter)
@@ -75,6 +76,7 @@ export const Favorites = () => {
 							>
 								X
 							</Button>
+							<Checkbox onChange={() => setChecked(true)} />
 						</Space>
 					</List.Item>
 				))}

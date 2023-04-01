@@ -3,27 +3,12 @@ import Button from 'antd/es/button'
 import { useState } from 'react'
 import { useAppDispatch } from '../hooks/hooks'
 import { addUser } from '../store/slices/usersSlice'
+import Modal from '../UI/Modal/Modal'
 
-type Props = {
-	userName: string
-	setUserName: (value: string) => void
-	phone: string
-	setPhone: (value: string) => void
-	email: string
-	setEmail: (value: string) => void
-	clearAllInputs: () => void
-}
-
-export const AddNewUser = (props: Props) => {
-	const {
-		userName,
-		setUserName,
-		phone,
-		setPhone,
-		email,
-		setEmail,
-		clearAllInputs,
-	} = props
+export const AddNewUser = () => {
+	const [userName, setUserName] = useState('')
+	const [phone, setPhone] = useState('')
+	const [email, setEmail] = useState('')
 	const [open, setOpen] = useState(false)
 	const [errorPhone, setErrorPhone] = useState(false)
 
@@ -52,49 +37,68 @@ export const AddNewUser = (props: Props) => {
 		dispatch(addUser(newUser))
 	}
 
+	const clearAllInputs = () => {
+		setUserName('')
+		setPhone('')
+		setEmail('')
+	}
+
 	return (
 		<>
-			{open && (
-				<>
-					<Input
-						placeholder='Name'
-						bordered={true}
-						value={userName}
-						onChange={e => setUserName(e.currentTarget.value)}
-						style={{ width: 200 }}
-					/>
-					<Input
-						placeholder='Phone'
-						bordered={true}
-						value={phone}
-						style={
-							errorPhone
-								? { borderColor: 'red', width: 200 }
-								: { borderColor: '', width: 200 }
-						}
-						onChange={e => onSetPhone(e.currentTarget.value)}
-					/>
-					<Input
-						placeholder='Email'
-						bordered={true}
-						value={email}
-						style={{ width: 200 }}
-						onChange={e => setEmail(e.currentTarget.value)}
-					/>
-				</>
-			)}
-			<Button onClick={() => setOpen(!open)}>Open User</Button>
-			{userName && (email || !errorPhone) ? (
-				<Button
-					onClick={() => {
-						onAddUser()
-						clearAllInputs()
-						setOpen(!open)
-					}}
-				>
-					Add User
-				</Button>
-			) : null}
+			<div>
+				{open && (
+					<Modal active={open} setActive={setOpen}>
+						<div
+							style={{
+								display: 'flex',
+								flexDirection: 'column',
+								gap: '10px',
+								margin: 'auto 0',
+								alignItems: 'center',
+								justifyItems: 'center',
+							}}
+						>
+							<Input
+								placeholder='Name'
+								bordered={true}
+								value={userName}
+								onChange={e => setUserName(e.currentTarget.value)}
+								style={{ width: '60%' }}
+							/>
+							<Input
+								placeholder='Phone'
+								bordered={true}
+								value={phone}
+								style={
+									errorPhone
+										? { borderColor: 'red', width: '60%' }
+										: { borderColor: '', width: '60%' }
+								}
+								onChange={e => onSetPhone(e.currentTarget.value)}
+							/>
+							<Input
+								placeholder='Email'
+								bordered={true}
+								value={email}
+								style={{ width: '60%' }}
+								onChange={e => setEmail(e.currentTarget.value)}
+							/>
+							{userName && (email || !errorPhone) ? (
+								<Button
+									onClick={() => {
+										onAddUser()
+										clearAllInputs()
+										setOpen(!open)
+									}}
+								>
+									Add User
+								</Button>
+							) : null}
+						</div>
+					</Modal>
+				)}
+				<Button onClick={() => setOpen(!open)}>Open User</Button>
+			</div>
 		</>
 	)
 }
